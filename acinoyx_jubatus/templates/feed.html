@@ -109,18 +109,22 @@
         <a href="/post" class="btn btn-primary">Nueva Publicacion</a>
     </div>
 
+    {% for post in posts %}
+
     <div class="post">
         <div class="post_user">
             <img class="post_user_picture" src="{{ url_for('static',filename='images_feed/fotoamigo1.jpeg') }}">
-            <p class="post_user_name"> Guepardo1 </p>
+            <p class="post_user_name"> {{ post.3 }} </p>
         </div>
         <div class="post_title">
-            <p>Titulo del post</p>
+            <p>{{post.1}}</p>
         </div>
         <div class="post_detail">
-            <div class="post_image_block">
-                <img class="post_image" src="{{ url_for('static',filename='images_feed/paisaje.jpeg') }}" alt="">
-            </div>
+            {% if post.0 %}
+                <div class="post_image_block">
+                    <img class="post_image" src="static/images/{{ post.0 }}" alt="No Image">
+                </div>
+            {% endif %}
             <div class="post_actions_block">
                 <div class="post_actions">
                     <img class="megusta" src="{{ url_for('static',filename='images_feed/like.jpeg') }}">
@@ -132,6 +136,7 @@
 
         </div>
     </div>
+    {% endfor %}
 
 
 </div>
