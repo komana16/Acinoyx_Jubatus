@@ -57,3 +57,7 @@ def detalle_post_general():
 def detalle_post_2():
     return render_template("detalle_post_2.html")
 
+@views.route('/post', methods=['GET', 'POST'])
+def post():
+    return render_template("crear_post.html")
+
