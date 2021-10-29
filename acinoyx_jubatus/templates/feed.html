@@ -31,6 +31,9 @@
         <div class="post_title">
             <p>{{post.1}}</p>
         </div>
+        <div class="post_date">
+            <p>{{post.2}}</p>
+        </div>
         <div class="post_detail">
             {% if post.0 %}
                 <div class="post_image_block">
@@ -39,8 +42,18 @@
             {% endif %}
             <div class="post_actions_block">
                 <div class="post_actions">
-                    <img class="megusta" src="{{ url_for('static',filename='images_feed/like.jpeg') }}">
-                    <img class="megusta" src="{{ url_for('static',filename='images_feed/comentario.jpeg') }}">
+                    <div id="container" class="container">
+                        <h2>Comentarios</h2>
+                        <form id="container_caja" action="">
+                            <textarea class="caja_comentario" placeholder="Deje un comentario..."></textarea>
+                            <div class="btn">
+                                <input type="submit" value="Comentar">
+                                <button>Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <input type="image" id="megusta" name="megusta" alt="Me Gusta" src="{{ url_for('static',filename='images_feed/like.jpeg') }}"/>
+                    <input type="image" id="comentario" name="comentario" alt="Comentario" src="{{ url_for('static',filename='images_feed/comentario.jpeg') }}"/>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, make_response
 from werkzeug.wrappers import response
-from .modelos import users
+from .__init__ import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from acinoyx_jubatus import db    
 from flask_login import login_user, login_required, logout_user, current_user       
@@ -16,28 +16,59 @@ def login():
         password = request.form.get('Contraseña')
         checkid = request.form.get('checkid')
 
-        user = users.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 flash(f'Logueado exitosamente como {user.user_name}', category='success')
                 if checkid:
-                    response = make_response(render_template("feed.html", user=current_user) )
-                    response.set_cookie("user_id", 
-                                        f"{user.id}",
-                                        secure = True)
                     login_user(user, remember=True)
+                    redirect(url_for('views.feed'))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                    result = db.engine.execute(
+                                                    """
+                                                SELECT photo, foot_note, post_date, photo_user_name
+                                                FROM post
+                                                ORDER
+                                                BY id DESC
+                                                    """
+                                                )
+
+
+                    response = make_response(render_template("feed.html", posts=result, user=current_user))                   
+                    response.set_cookie("user_id",
+                                        f"{user.id}",
+                                        secure=True)
+                    response.set_cookie("photo_user_name",
+                                        f"{user.user_name}",
+                                        secure=True)
                     return response
                 else:
-                    response = make_response(render_template("feed.html", user=current_user) )
-                    response.set_cookie("user_id", 
-                                        f"{user.id}",
-                                        secure = True)
                     login_user(user, remember = False)
+                    redirect(url_for('views.feed'))
+                    result = db.engine.execute(
+                                                    """
+                                                SELECT photo, foot_note, post_date, photo_user_name
+                                                FROM post
+                                                ORDER
+                                                BY id DESC
+                                                    """
+                                                )
+
+
+                    response = make_response(render_template("feed.html", posts=result, user=current_user))
+                    redirect(url_for('views.feed'))
+                    response.set_cookie("user_id",
+                                        f"{user.id}",
+                                        secure=True)
+                    response.set_cookie("photo_user_name",
+                                        f"{user.user_name}",
+                                        secure=True)
                     return response
             else:
                 flash('Contraseña incorrecta, intentelo de nuevo.', category='error')
+                return render_template("login.html", user=current_user)
         else:
             flash('El correo electronico no exite', category='error')
+        return render_template("login.html", user=current_user)
 
     return render_template("login.html", user=current_user) #Depending on the status of the current_user (signed in or not), the login button is displayed
 
@@ -56,7 +87,7 @@ def registro():
         age = request.form['edad']
         password = request.form['Contraseña']
 
-        user = users.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             flash('El correo ya existe', category='error')
 
@@ -73,11 +104,11 @@ def registro():
             flash('Debe tener almenos 18 años', category='error')
             pass
         else:   # add user to the database 
-            new_user = users(email=email, user_name=name, age=age, password=generate_password_hash(password, method='sha256'))
+            new_user = User(email=email, user_name=name, age=age, password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             flash('Registro exitoso!', category='succes')
-            return redirect(url_for('views.feed'))
+            return redirect(url_for('auth.login'))
             
     return render_template("registro.html", user=current_user)   #Depending on the status of the current_user (signed in or not), the sign up button is displayed
     

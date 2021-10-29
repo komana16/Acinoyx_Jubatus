@@ -12,6 +12,7 @@
     font-weight: bold;
 }
 
+
 .search_text p {
     margin: 0;
 }
@@ -30,9 +31,15 @@
     width: 15px;
 }
 
+.comentario{
+    width: 15px;
+}
+
 .post {
     margin: 30px auto 10px auto;
     width: 600px;
+    padding-bottom: 18%;
+    padding-left: 1%;
     background-color: azure;
     outline: auto;    
 }
@@ -77,7 +84,20 @@
 
 .post_actions {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: left;
     height: 40px;
     padding: 10px;
+    left: 20%;
+}
+
+.container {
+    padding: 2%;
+    
+}
+
+.caja_comentario {
+    width: 100%;
+    border: 2px solid #333;
+    padding: 5%;
+    padding-left: 10%;
 }
